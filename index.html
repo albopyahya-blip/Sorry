@@ -1,172 +1,444 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HBD</title>
+<title>ليكي انتي ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;600&display=swap" rel="stylesheet">
+
 <style>
-/* الوضع الليلي افتراضي */
+body {
+    margin: 0;
+    font-family: 'Cairo', 'Roboto', sans-serif; /* Cairo للعربي + Roboto للإنجليزي */
+    background: black;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+     border: 20px  /* 👈 الإطار */
+     
+}
+p, h1 {
+    word-break: break-word;
+    white-space: normal;
+}
+h1, h2, p, button, input {
+    font-family: inherit;
+}
+
+/* ضبط وزن الخط */
+h1 {
+    font-weight: 600;
+    font-size: 2em;
+}
+
+p {
+    font-weight: 300;
+    font-size: 1.2em;
+}
+
+button {
+    font-weight: 500;
+    font-size: 1em;
+}
+
+/* اتجاه النص */
+body[dir="rtl"] {
+    direction: rtl;
+}
+
+/* لو عايز الإنجليزية تظهر بشكل جميل */
+.section h1, .section p {
+    unicode-bidi: embed; /* يخلي النص يلتزم بالخط العربي/الإنجليزي حسب المحتوى */
+}
+.section {
+    max-width: 90%;
+    margin: auto;
+}
+.section {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.active {
+    display: flex;
+    animation: fade 1s ease;
+}
+
+@keyframes fade {
+    from {opacity:0; transform:translateY(20px);}
+    to {opacity:1; transform:translateY(0);}
+}
+
+button {
+    padding: 6px 26px;
+    border-radius: 25px;
+    border: none;
+    background: white;
+    color: black;
+    cursor: pointer;
+    margin: 10px;
+    font-size: 15px ;
+}
+
+
+/* زرار اللغة */
+.toggleBtn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 30px;        /* عرض الزرار */
+    height: 30px;       /* ارتفاع الزرار */
+    font-size: 12px;    /* حجم النص داخل الزرار */
+    line-height: 1;     /* لضبط توازن النص */
+    background: #ff77bb;
+    color: white;
+    border: none;
+    z-index: 1000%; /* دائري */ z-index: 1000;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+}
+#codeInput {
+    padding: 12px 20px;
+    border-radius: 25px;
+    border: 2px solid transparent;
+    outline: none;
+    font-size: 16px;
+    text-align: center;
+    background: #222;
+    color: white;
+    transition: 0.3s;
+    width: 200px;
+}
+
+#codeInput:focus {
+    border: 2px solid #ff77bb;
+    box-shadow: 0 0 10px #ff77bb;
+}
+
+/* رسالة الخطأ */
+#errorMsg {
+    color: #ff4d6d;
+    font-size: 14px;
+    margin-top: 5px;
+    height: 18px;
+}
+</style>
+</head>
+
+<body>
+<button class="toggleBtn" id="langBtn">AR</button>
+
+<audio id="music" loop>
+    <source src="mm/Hamaki_-_Yally_Zaalan.mp3" type="audio/mpeg">
+</audio>
+
+
+<div class="section active">
+    <h1 data-ar="ملوكتي" data-en="maloktyyy">ملوكتي</h1>
+
+    <!-- <h1 id="hello"></h1> -->
+    <p data-ar="ممكن اخد من وقتك دقيقه" data-en="Can I take a minute of your time">ممكن اخد من وقتك دقيقه</p>
+    <button onclick="start()">okay</button>
+</div>
+
+<!-- باقي الصفحات -->
+<div class="section">
+    <h1 data-ar="فاكرة أول مرة؟" data-en="Do you remember?">فاكرة أول مرة؟</h1>
+    <p data-ar="وقتها ماكنتش أعرف إن البنت اللي قدامي هتبقى أهم حد في حياتي بالشكل ده بس حصل "
+       data-en="Back then I didn’t know the girl in front of me would become the most important person in my life but she did ">
+       وقتها ماكنتش أعرف إن البنت اللي قدامي هتبقى أهم حد في حياتي بالشكل ده بس حصل 
+    </p>
+    <button onclick="next()">كملي</button>
+</div>
+
+<div class="section">
+    <h1 data-ar="آسف يحبيبتي" data-en="I'm so sorry my love">
+        آسف يحبيبتي</h1>
+    <p data-ar="عارف إني زعلتك بس مكنت قصد والله" 
+       data-en="I know I upset you, but I didn't mean to I swear">
+       عارف إني زعلتك بس مكنت قصد والله</p>
+    <button onclick="next()">Next</button>
+</div>
+
+<div class="section">
+    <h1 data-ar="بحبك من" data-en="I love you from">بحبك من</h1>
+    <p id="counter">days</p>
+    <button onclick="next()">Next</button>
+
+</div>
+
+<div class="section">
+    <h1 data-ar="كودنا السري " data-en="Our secret code ">لو فاكرة كودنا السري </h1>
+    <p data-ar="ده رمزنا اللي بس بينا " data-en="This is our little secret code ">ده رمزنا اللي بس بينا </p>
+    <input id="codeInput" type="password" placeholder="00/0">
+    <p id="errorMsg"></p>
+    <button onclick="checkCode()">entry</button>
+
+</div>
+
+<div class="section">
+    <h1 data-ar="الحقيقة " data-en="The truth ">الحقيقة </h1>
+    <p data-ar="انتي أهم حد في حياتي وكل لحظة معاك احلا لحظه" 
+       data-en="You are the most important person in my life and every moment with you is the best moment.">
+انتي أهم حد في حياتي وكل لحظة معاك احلا لحظه    </p>
+    <button onclick="next()">i love you</button>
+</div>
+
+<div class="section">
+    <h1 data-ar="مسمحاني" data-en="Forgive me">
+        مسمحاني
+    </h1>
+
+    <p data-ar="مش بطلب غير فرصة صغيرة أصلح كل حاجة غلطت فيها "
+       data-en="I'm only asking for a small chance to fix everything I did wrong ">
+       مش بطلب غير فرصة صغيرة أصلح كل حاجة غلطت فيها 
+    </p>
+
+    <button onclick="forgive()">ماشي</button>
+    <button onclick="moveBtn(this)">لا</button>
+</div>
+
+<div class="section">
+    <h1 data-ar="كنت عارف " data-en="I knew it ">
+        كنت عارف 
+    </h1>
+
+    <p data-ar="عشان قلبك طيب وبتحبيني "
+       data-en="Because you have a kind heart and you love me">
+     عشان قلبك طيب وبتحبيني 
+        </p>
+
+    <button onclick="next()">بس استني</button>
+</div>
+
+<div class="section">
+    <h1 data-ar="تعرفي؟ " data-en="?You know ">تعرفي؟ </h1>
+
+     <p data-ar="       انتي فعلاً من أحلى الحاجات اللي حصلتلي وجودك في حياتي فارق معايا اوي و يارب نفضل علطول مع بعض يروحي
+"
+       data-en="You are truly one of the best things that has ever happened to me Your presence in my life means so much to me and I pray that we will always stay together my love">
+              انتي فعلاً من أحلى الحاجات اللي حصلتلي وجودك في حياتي فارق معايا اوي و يارب نفضل علطول مع بعض يروحي
+
+    </p>
+</div>
+
+<script>
+// let girlName = "اسمها هنا ❤️"; // 👈 عدل ده
+// document.getElementById("hello").innerText = girlName;
+
+let sections = document.querySelectorAll('.section');
+let current = 0;
+
+function start() {
+    document.getElementById("music").play();
+    next();
+}
+
+function next() {
+    sections[current].classList.remove("active");
+    current++;
+    sections[current].classList.add("active");
+}
+
+/* counter */
+let startDate = new Date("2026-01-20"); // 👈 غير التاريخ
+setInterval(() => {
+    let now = new Date();
+    let diff = now - startDate;
+    let days = Math.floor(diff / (1000*60*60*24));
+    document.getElementById("counter").innerText = days + " يوم";
+},1000);
+
+/* code */
+function checkCode() {
+    let code = document.getElementById("codeInput").value;
+    if(code === "20/1"){
+        next();
+    } else {
+        alert("غلط");
+    }
+}
+
+/* زرار بيهرب 😂 */
+function moveBtn(btn){
+    btn.style.position="absolute";
+    btn.style.top=Math.random()*80+"%";
+    btn.style.left=Math.random()*80+"%";
+}
+
+function forgive(){
+    next();
+}
+
+const langBtn = document.getElementById('langBtn');
+let lang = 'ar';  // الوضع الحالي
+
+langBtn.addEventListener('click', () => {
+    lang = (lang === 'ar') ? 'en' : 'ar';
+    langBtn.innerText = lang.toUpperCase();  // يغير النص في الزر
+    document.querySelectorAll('[data-ar]').forEach(el => {
+        el.innerText = el.getAttribute('data-' + lang);
+    });
+});
+
+function checkCode() {
+    let input = document.getElementById("codeInput");
+    let error = document.getElementById("errorMsg");
+
+    if(input.value === "20/1"){
+        next();
+    } else {
+        error.innerText = "غلط 🥺";
+
+        // اهتزاز
+        input.style.border = "2px solid red";
+        input.style.transform = "translateX(5px)";
+        
+        setTimeout(() => {
+            input.style.transform = "translateX(-5px)";
+        }, 100);
+
+        setTimeout(() => {
+            input.style.transform = "translateX(0)";
+        }, 200);
+
+        // مسح الباسورد
+        setTimeout(() => {
+            input.value = "";
+            input.style.border = "2px solid transparent";
+            error.innerText = "";
+        }, 800);
+    }
+}
+</script>
+
+<style>
 :root {
-  --bg-dark: #111111;      /* خلفية داكنة */
-  --bg-side: #333333;      /* خلفية timer */
-  --bg-light: #ffe0f0;     /* صفحات خاصة */
-  
-  --text-main: #eeeeee;    /* نصوص عامة */
-  --text-primary: #ff66aa; /* نصوص/عناوين رئيسية */
-  
-  --btn-main: #ff77bb;     /* زرار رئيسي */
-  --btn-hover: #ff99cc;    /* hover */
-  
-  --accent: #70b5ff;       /* أيقونات */
+  --bg-dark: #111111;
+  --bg-side: #333333;
+  --bg-light: #ffe0f0;
+  --text-main: #eeeeee;
+  --text-primary: #ff66aa;
+  --btn-main: #ff77bb;
+  --btn-hover: #ff99cc;
+  --accent: #70b5ff;
 }
 
 [data-theme="light"] {
   --bg-dark: #ffccd5;
   --bg-side: #ffffff;
   --bg-light: #fff0f5;
-  
   --text-main: #222222;
   --text-primary: #e6007a;
-  
   --btn-main: #ff77bb;
   --btn-hover: #ff99cc;
-  
   --accent: #4d94ff;
 }
 
-/* body وكل شيء يعتمد على المتغيرات */
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family: 'Arial', 'Segoe UI', Tahoma, sans-serif;
+body {
   background-color: var(--bg-dark);
   color: var(--text-main);
-  transition: background 0.4s, color 0.4s;
+  height: 100vh;
 }
 
-/* timer */
-#timer{
-  display:flex;
-  gap:15px;
-  font-size:3.5rem; /* أكبر وأكثر وضوحًا */
-  font-weight:bold;
-  text-align:center;
-  line-height:1.2;
-}
-
-#timer span{
-  background: var(--bg-side);
-  padding:20px 25px;
-  border-radius:12px;
+button {
+  background-color: var(--btn-main);
   color: var(--text-main);
-  min-width:70px;
-  text-align:center;
-  font-family: 'Arial', sans-serif;
-  letter-spacing:1px;
-  transition: background 0.4s, color 0.4s;
 }
 
-/* switch */
-.switch{
-  font-size:15px;
-  position:fixed;
-  top:20px;
-  right:20px;
-  width:3.2em;
-  height:1.8em;
+button:hover {
+  background-color: var(--btn-hover);
 }
 
-.switch input{
-  opacity:0;
+/* Switch صغير */
+.switch {
+  font-size: 15px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: inline-block;
+  width: 3.2em;
+  height: 1.8em;
+  border-radius: 30px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  z-index: 2000;
 }
 
-.slider{
-  position:absolute;
-  inset:0;
-  cursor:pointer;
-  background:var(--bg-side);
-  border-radius:30px;
-  transition:.4s;
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-.slider:before{
-  content:"";
-  position:absolute;
-  height:1em;
-  width:1em;
-  border-radius:50%;
-  left:.4em;
-  bottom:.4em;
-  background:var(--btn-main);
-  transition:.4s;
-  box-shadow:inset 6px -3px 0 #fff;
+.slider {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-side);
+  border-radius: 30px;
+  cursor: pointer;
 }
 
-.switch input:checked + .slider{
-  background:var(--accent);
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 1em;
+  width: 1em;
+  left: 0.4em;
+  bottom: 0.4em;
+  border-radius: 50%;
+  background: var(--btn-main);
+  transition: 0.4s;
 }
 
-.switch input:checked + .slider:before{
-  transform:translateX(1.4em);
-  box-shadow: inset 12px -3px 0 12px #ffcf48;
+.switch input:checked + .slider {
+  background-color: var(--accent);
 }
 
-/* stars */
-.star{
-  position:absolute;
-  width:4px;
-  height:4px;
-  background:#fff;
-  border-radius:50%;
+.switch input:checked + .slider:before {
+  transform: translateX(1.4em);
+  box-shadow: inset 12px -3px 0px 12px #ffcf48;
 }
 
-.star_1{left:2em;top:.4em;}
-.star_2{left:1.8em;top:1em;}
-.star_3{left:2.4em;top:.7em;}
-
-.switch input:checked ~ .slider .star{
-  opacity:0;
+/* النجوم */
+.star {
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  transition: all 0.4s;
 }
 
-/* cloud */
-.cloud{
-  position:absolute;
-  bottom:-1em;
-  left:-.9em;
-  opacity:0;
-  transition:.4s;
+.star_1 { left: 2em; top: 0.4em; }
+.star_2 { left: 1.8em; top: 1em; }
+.star_3 { left: 2.4em; top: 0.7em; }
+
+.switch input:checked ~ .slider .star {
+  opacity: 0;
 }
 
-.switch input:checked ~ .slider .cloud{
-  opacity:1;
+/* السحابة */
+.cloud {
+  width: 2.8em;
+  position: absolute;
+  bottom: -1em;
+  left: -0.9em;
+  opacity: 0;
+  transition: all 0.4s;
 }
 
-/* responsive للموبايل */
-@media(max-width:480px){
-  #timer{
-    flex-direction:column;
-    font-size:2.5rem;
-  }
-  
-  #timer span{
-    min-width:60px;
-    padding:15px 20px;
-    border-radius:10px;
-  }
+.switch input:checked ~ .slider .cloud {
+  opacity: 1;
 }
 </style>
-</head>
-<body>
-
-<div id="timer">
-  <!-- <span id="days">00<span class="dot">●</span></span>
-  <span id="hours">00<span class="dot">●</span></span> -->
-  <span id="minutes">00<span class="dot">●</span></span>
-  <span id="seconds">00<span class="dot">●</span></span>
-</div>
 
 <label class="switch">
   <input type="checkbox" id="themeSwitch">
@@ -174,58 +446,24 @@ body{
     <span class="star star_1"></span>
     <span class="star star_2"></span>
     <span class="star star_3"></span>
-    <!-- <span class="cloud">☁️</span> -->
+    <span class="cloud">☁️</span>
   </span>
 </label>
 
 <script>
-// عناصر
-const themeSwitch = document.getElementById("themeSwitch");
+const themeSwitch = document.getElementById('themeSwitch');
 const html = document.documentElement;
 
-// استرجاع الوضع من localStorage
-let savedTheme = localStorage.getItem("theme");
-if(savedTheme === "light"){
-  html.setAttribute("data-theme","light");
-  themeSwitch.checked = true;
-}
+let darkMode = localStorage.getItem('theme') === 'light' ? false : true;
+themeSwitch.checked = !darkMode;
+html.setAttribute('data-theme', darkMode ? 'dark' : 'light');
 
-// تغيير الوضع عند تبديل الزر
-themeSwitch.addEventListener("change", ()=>{
-  if(themeSwitch.checked){
-    html.setAttribute("data-theme","light");
-    localStorage.setItem("theme","light");
-  }else{
-    html.removeAttribute("data-theme");
-    localStorage.setItem("theme","dark");
-  }
+themeSwitch.addEventListener('change', () => {
+  darkMode = !themeSwitch.checked;
+  html.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+  localStorage.setItem('theme', darkMode ? 'dark' : 'light');
 });
 </script>
-<script src="js/ym600.js"></script>
 
 </body>
-<script>
-let totalTime = 60 * 60; // 60 دقيقة = 3600 ثانية
-
-const minutesEl = document.getElementById("minutes");
-const secondsEl = document.getElementById("seconds");
-
-function updateTimer(){
-  let minutes = Math.floor(totalTime / 60);
-  let seconds = totalTime % 60;
-
-  minutesEl.innerHTML = String(minutes).padStart(2, '0') + '<span class="dot">●</span>';
-  secondsEl.innerHTML = String(seconds).padStart(2, '0') + '<span class="dot">●</span>';
-
-  if(totalTime > 0){
-    totalTime--;
-  } else {
-    clearInterval(timer);
-    alert("خلص الوقت ❤️");
-  }
-}
-
-let timer = setInterval(updateTimer, 1000);
-updateTimer();
-</script>
 </html>
