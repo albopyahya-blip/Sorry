@@ -1,115 +1,231 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>رسالة ليكي ❤️</title>
-
+<title>HBD</title>
 <style>
-body {
-    margin: 0;
-    font-family: 'Cairo', sans-serif;
-    background: #000;
-    color: #fff;
-    text-align: center;
-    overflow-x: hidden;
+/* الوضع الليلي افتراضي */
+:root {
+  --bg-dark: #111111;      /* خلفية داكنة */
+  --bg-side: #333333;      /* خلفية timer */
+  --bg-light: #ffe0f0;     /* صفحات خاصة */
+  
+  --text-main: #eeeeee;    /* نصوص عامة */
+  --text-primary: #ff66aa; /* نصوص/عناوين رئيسية */
+  
+  --btn-main: #ff77bb;     /* زرار رئيسي */
+  --btn-hover: #ff99cc;    /* hover */
+  
+  --accent: #70b5ff;       /* أيقونات */
 }
 
-.section {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+[data-theme="light"] {
+  --bg-dark: #ffccd5;
+  --bg-side: #ffffff;
+  --bg-light: #fff0f5;
+  
+  --text-main: #222222;
+  --text-primary: #e6007a;
+  
+  --btn-main: #ff77bb;
+  --btn-hover: #ff99cc;
+  
+  --accent: #4d94ff;
 }
 
-button {
-    padding: 12px 25px;
-    border: none;
-    background: white;
-    color: black;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 20px;
-    transition: 0.3s;
+/* body وكل شيء يعتمد على المتغيرات */
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family: 'Arial', 'Segoe UI', Tahoma, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  transition: background 0.4s, color 0.4s;
 }
 
-button:hover {
-    background: #ccc;
+/* timer */
+#timer{
+  display:flex;
+  gap:15px;
+  font-size:3.5rem; /* أكبر وأكثر وضوحًا */
+  font-weight:bold;
+  text-align:center;
+  line-height:1.2;
 }
 
-.hidden {
-    display: none;
+#timer span{
+  background: var(--bg-side);
+  padding:20px 25px;
+  border-radius:12px;
+  color: var(--text-main);
+  min-width:70px;
+  text-align:center;
+  font-family: 'Arial', sans-serif;
+  letter-spacing:1px;
+  transition: background 0.4s, color 0.4s;
 }
 
-.fade {
-    animation: fadeIn 1s ease-in-out;
+/* switch */
+.switch{
+  font-size:15px;
+  position:fixed;
+  top:20px;
+  right:20px;
+  width:3.2em;
+  height:1.8em;
 }
 
-@keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
+.switch input{
+  opacity:0;
 }
 
-h1, p {
-    max-width: 600px;
+.slider{
+  position:absolute;
+  inset:0;
+  cursor:pointer;
+  background:var(--bg-side);
+  border-radius:30px;
+  transition:.4s;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  height:1em;
+  width:1em;
+  border-radius:50%;
+  left:.4em;
+  bottom:.4em;
+  background:var(--btn-main);
+  transition:.4s;
+  box-shadow:inset 6px -3px 0 #fff;
+}
+
+.switch input:checked + .slider{
+  background:var(--accent);
+}
+
+.switch input:checked + .slider:before{
+  transform:translateX(1.4em);
+  box-shadow: inset 12px -3px 0 12px #ffcf48;
+}
+
+/* stars */
+.star{
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:#fff;
+  border-radius:50%;
+}
+
+.star_1{left:2em;top:.4em;}
+.star_2{left:1.8em;top:1em;}
+.star_3{left:2.4em;top:.7em;}
+
+.switch input:checked ~ .slider .star{
+  opacity:0;
+}
+
+/* cloud */
+.cloud{
+  position:absolute;
+  bottom:-1em;
+  left:-.9em;
+  opacity:0;
+  transition:.4s;
+}
+
+.switch input:checked ~ .slider .cloud{
+  opacity:1;
+}
+
+/* responsive للموبايل */
+@media(max-width:480px){
+  #timer{
+    flex-direction:column;
+    font-size:2.5rem;
+  }
+  
+  #timer span{
+    min-width:60px;
+    padding:15px 20px;
+    border-radius:10px;
+  }
 }
 </style>
 </head>
-
 <body>
 
-<!-- 1 -->
-<div class="section" id="section1">
-    <h1>ممكن تاخدي دقيقة بس؟ ❤️</h1>
-    <button onclick="next(2)">اضغطي هنا</button>
+<div id="timer">
+  <!-- <span id="days">00<span class="dot">●</span></span>
+  <span id="hours">00<span class="dot">●</span></span> -->
+  <span id="minutes">00<span class="dot">●</span></span>
+  <span id="seconds">00<span class="dot">●</span></span>
 </div>
 
-<!-- 2 -->
-<div class="section hidden" id="section2">
-    <h1>فاكرة أول مرة؟ 🥺</h1>
-    <p>أنا لسه فاكر كل حاجة… ضحكتك، كلامك، وكل تفصيلة صغيرة</p>
-    <button onclick="next(3)">كملي</button>
-</div>
-
-<!-- 3 -->
-<div class="section hidden" id="section3">
-    <h1>أنا غلطت…</h1>
-    <p>ومش بحاول أبرر، بس أنا فعلاً زعلان إني زعلتك 💔</p>
-    <button onclick="next(4)">كملي</button>
-</div>
-
-<!-- 4 -->
-<div class="section hidden" id="section4">
-    <h1>بس الحقيقة…</h1>
-    <p>أنا بحبك في كل حالاتك، حتى وقت الزعل والخناق ❤️</p>
-    <button onclick="next(5)">كملي</button>
-</div>
-
-<!-- 5 -->
-<div class="section hidden" id="section5">
-    <h1>لو لسه هنا…</h1>
-    <p>ده معناه إنك لسه مهمة عندك 💖</p>
-    <button onclick="next(6)">اضغطي هنا</button>
-</div>
-
-<!-- 6 -->
-<div class="section hidden" id="section6">
-    <h1>ممكن نبدأ من جديد؟ ❤️</h1>
-</div>
+<label class="switch">
+  <input type="checkbox" id="themeSwitch">
+  <span class="slider">
+    <span class="star star_1"></span>
+    <span class="star star_2"></span>
+    <span class="star star_3"></span>
+    <!-- <span class="cloud">☁️</span> -->
+  </span>
+</label>
 
 <script>
-function next(id) {
-    document.querySelectorAll('.section').forEach(sec => {
-        sec.classList.add('hidden');
-    });
+// عناصر
+const themeSwitch = document.getElementById("themeSwitch");
+const html = document.documentElement;
 
-    let nextSection = document.getElementById('section' + id);
-    nextSection.classList.remove('hidden');
-    nextSection.classList.add('fade');
+// استرجاع الوضع من localStorage
+let savedTheme = localStorage.getItem("theme");
+if(savedTheme === "light"){
+  html.setAttribute("data-theme","light");
+  themeSwitch.checked = true;
 }
+
+// تغيير الوضع عند تبديل الزر
+themeSwitch.addEventListener("change", ()=>{
+  if(themeSwitch.checked){
+    html.setAttribute("data-theme","light");
+    localStorage.setItem("theme","light");
+  }else{
+    html.removeAttribute("data-theme");
+    localStorage.setItem("theme","dark");
+  }
+});
 </script>
+<script src="js/ym600.js"></script>
 
 </body>
+<script>
+let totalTime = 60 * 60; // 60 دقيقة = 3600 ثانية
+
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+
+function updateTimer(){
+  let minutes = Math.floor(totalTime / 60);
+  let seconds = totalTime % 60;
+
+  minutesEl.innerHTML = String(minutes).padStart(2, '0') + '<span class="dot">●</span>';
+  secondsEl.innerHTML = String(seconds).padStart(2, '0') + '<span class="dot">●</span>';
+
+  if(totalTime > 0){
+    totalTime--;
+  } else {
+    clearInterval(timer);
+    alert("خلص الوقت ❤️");
+  }
+}
+
+let timer = setInterval(updateTimer, 1000);
+updateTimer();
+</script>
 </html>
